@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ScrollView } from 'react-native';
-import Joke from './JokePage';
+import Joke from './Joke';
 
 class JokesList extends Component {
 
@@ -26,13 +26,9 @@ class JokesList extends Component {
         );
     }
 
-    render() {
-        return (
-            <ScrollView>
-                {this.generateJokes()}
-            </ScrollView>
-        );
-    }
 }
 
+
 export default JokesList;
+
+

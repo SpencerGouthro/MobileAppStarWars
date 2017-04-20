@@ -1,12 +1,37 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 import Header from './Header';
+import Joke from './Joke';
 
 class Home extends Component {
+ 
     constructor() {
         super();
-
+        this.state = { jokes: [],
+            currentJoke: {
+                jokelead: '',
+                punchline: ''
+            }
+     };
         this.navigate = this.navigate.bind(this);
+    }
+
+    componentDidMount() {
+        fetch('http://localhost:1234/jokes', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(response => {
+            return response.json().then(json => {
+                let rand = json.message[Math.floor(Math.random() * json.message.length)];
+                this.setState({ 
+                    jokes: json.message,
+                    currentJoke: rand
+                });
+            });
+        });
     }
 
     navigate(name) {
@@ -15,50 +40,41 @@ class Home extends Component {
         });
     }
 
+
     render() {
         return (
-            <View style={styles.mainPageStyle}>
+            <View>
                 <Header />
-                <TouchableHighlight onPress={() => this.navigate('aboutPage')}>
-                    <Text>Go to About Page</Text>
-                </TouchableHighlight>
-
-{/*
-                <View style={styles.JokeView}>
-                    <View style={styles.buttonView}>
-                        <TouchableHighlight style={styles.jokeButton} underlayColor='firebrick'>
+                <View style={styles.homePageView}>
+                    <View style={styles.headerButtonsView}>
+                        <TouchableHighlight style={styles.randomJokeButton} onPress={() => this.navigate('homePage')}>
                             <Text style={styles.buttonText}>Randomize Joke</Text>
                         </TouchableHighlight>  
-                        <TouchableHighlight style={styles.routingButton} underlayColor='lime'>
+                        <TouchableHighlight style={styles.routingButton} onPress={() => this.navigate('jokePage')}>
                             <Text style={styles.buttonText}>See all jokes.</Text>
-                        </TouchableHighlight> 
+                        </TouchableHighlight>
                     </View>
-                    <Text style={styles.jokeViewText}>Joke Lead</Text>      
-                    <Text style={styles.jokeViewText}>Joke Punchline</Text>      
-                </View>*/}
+                    <View style={styles.jokeView}>
+                        <Joke jokelead={this.state.currentJoke.jokelead} punchline={this.state.currentJoke.punchline} />                    
+                    </View>    
+                </View>
             </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    mainPageStyle: {
-    },
-    JokeView: {
+    homePageView: {
         backgroundColor: '#121212',
-        padding: 20,
-        borderBottomWidth: 3,
-        borderColor: 'yellow',
     },
-    buttonView: {
-        flexDirection: 'row-reverse',
-        justifyContent: 'space-around'
+    jokeView: {
+        padding: 15,
     },
-    jokeViewText: {
-        alignSelf: 'center',
-        color: 'yellow',
-        fontSize: 15,
-        fontWeight: 'bold',
+
+    headerButtonsView: {
+        paddingTop: 20,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
     },
 
     buttonText: {
@@ -66,10 +82,12 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: 'white',
         alignSelf: 'center',
+        textShadowColor: 'black',
+        textShadowOffset: ({ width: 1, height: 1 }),        
     },
-    jokeButton: {
+    randomJokeButton: {
         height: 38,
-        width: 140,
+        width: 170,
         backgroundColor: '#C10000',
         borderColor: 'white',
         borderWidth: 1,
@@ -79,8 +97,8 @@ const styles = StyleSheet.create({
     },
     routingButton: {
         height: 38,
-        width: 140,
-        backgroundColor: '#4B82D4',
+        width: 170,
+        backgroundColor: '#3d54ca',
         borderColor: 'white',
         borderWidth: 1,
         borderRadius: 8,
