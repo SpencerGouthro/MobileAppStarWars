@@ -6,7 +6,7 @@ import Header from './Header';
 class InputJoke extends Component {
     constructor() {
         super();
-
+        this.state = { text: '' };
         this.navigate = this.navigate.bind(this);
     }
 
@@ -16,22 +16,58 @@ class InputJoke extends Component {
         });
     }
 
+    PostAJoke() {
+        fetch('http://localhost:1234/jokes', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                jokelead: this.state.jokelead,
+                punchline: this.state.punchline
+            })
+        }).then(response => {
+                return response.json().then(json => {
+                    alert('Your joke has been added.'); 
+                    this.navigate('jokePage');
+                });
+            });
+    }
+
     render() {
         return (
-            <View style={styles.jokeInputViewContainer}>
+            <View>
                 <Header />
+                <View style={styles.jokeInputViewContainer}>
                     <View style={styles.headerButtonView}>  
-                        <TouchableHighlight style={styles.routingButton} onPress={() => this.navigate('jokePage')}>   
-                            <Text style={styles.buttonText}>Confirm to add new joke.</Text>
+                        <TouchableHighlight 
+                            style={styles.routingButton} 
+                            onPress={() => { this.PostAJoke(); }
+                            }
+                        >   
+                            <Text style={styles.buttonText}>Add new joke.</Text>
                         </TouchableHighlight>
+                        <TouchableHighlight style={styles.cancelButton} onPress={() => this.navigate('homePage')}>   
+                            <Text style={styles.buttonText}>Cancel</Text>
+                        </TouchableHighlight>                    
                     </View> 
                     <View style={styles.ViewAroundTextInputs}>
                         <Text style={styles.InputJokeTextInstructions}>A joke contains a lead and a punchline.</Text>
                         <Text style={styles.InputJokeTextInstructions}>Insert your joke's lead here.</Text>
-                        <TextInput style={styles.JokeleadInputField} />
-                        <Text style={styles.InputJokeTextInstructions}>Insert your joke's punchline here.</Text>
-                        <TextInput style={styles.PunchlineInputField} />
+                        <TextInput 
+                            style={styles.JokeleadInputField}
+                            onChangeText={(jokelead) => this.setState({ jokelead })}
+                            value={this.state.jokelead} 
+                        />
+                        <Text style={styles.InputJokeTextInstructions}>Insert your joke's punchline here. </Text>
+                        <TextInput 
+                            style={styles.PunchlineInputField} 
+                            onChangeText={(punchline) => this.setState({ punchline })}
+                            value={this.state.punchline}
+                        />
                     </View>
+                </View>
             </View>
         );
     }
@@ -39,9 +75,8 @@ class InputJoke extends Component {
 
 const styles = StyleSheet.create({
     jokeInputViewContainer: {
-        backgroundColor: '#121212',
-    }, 
-
+      backgroundColor: '#121212', 
+    },
     ViewAroundTextInputs: {
         padding: 10,
     },
@@ -67,7 +102,7 @@ const styles = StyleSheet.create({
     },
     routingButton: {
         height: 38,
-        width: 200,
+        width: 170,
         backgroundColor: '#199502',
         borderColor: 'white',
         borderWidth: 1,
@@ -75,6 +110,16 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         justifyContent: 'center',
     },
+    cancelButton: {
+        height: 38,
+        width: 170,
+        backgroundColor: '#C10000',
+        borderColor: 'white',
+        borderWidth: 1,
+        borderRadius: 8,
+        marginBottom: 10,
+        justifyContent: 'center',
+    },    
     buttonText: {
         fontWeight: 'bold',
         fontSize: 15,

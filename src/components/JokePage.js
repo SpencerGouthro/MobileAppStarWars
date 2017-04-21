@@ -51,7 +51,7 @@ class JokePage extends Component {
                         </TouchableHighlight>
                     </View> 
                     <View style={styles.listOfAllJokesView}>
-                        <View style={styles.viewOfIndividualJokeAndButton}>
+                        <View style={styles.viewOfIndividualJoke}>
                             <ScrollView style={styles.viewOfGenerateJokesFunction}>
                                 {this.generateJokes()}
                             </ScrollView>            
@@ -68,7 +68,8 @@ const styles = StyleSheet.create({
     jokePageView: {
         backgroundColor: '#121212',
     }, 
-    viewOfIndividualJokeAndButton: {
+    viewOfIndividualJoke: {
+        height: 400,
         flexDirection: 'row',
         padding: 15,
         borderBottomWidth: 1,

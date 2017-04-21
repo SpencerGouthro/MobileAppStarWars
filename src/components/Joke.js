@@ -8,11 +8,11 @@ const Joke = (props) => {
                 <Text style={styles.jokeTextJokelead}>{props.jokelead}</Text>
                 <Text style={styles.jokeTextPunchline}>{props.punchline}</Text>
             </View>
-            <View style={styles.ViewOfDeleteJokeBtn}>
+            {/*<View style={styles.ViewOfDeleteJokeBtn}>
                 <TouchableHighlight style={styles.deleteJokeButton}>   
                     <Text style={styles.buttonText}>X</Text>
                 </TouchableHighlight> 
-            </View>
+            </View>*/}
         </View>
     );
 };
